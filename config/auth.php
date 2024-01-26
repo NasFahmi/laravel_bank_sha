@@ -14,9 +14,10 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'api',
         'passwords' => 'users',
     ],
+    //!secara default menggunakan guard api
 
     /*
     |--------------------------------------------------------------------------
@@ -38,8 +39,13 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'admin_users', //!untuk web masih tetap menggunakan session, dan karena web menggunakn adminUser maka disini diubah menjaid adminuser
         ],
+        //! api menggunakan jwt
+        'api'=>[
+            'driver' => 'jwt',
+            'provider' => 'users', //! user ini mengacu ke provider dibawah menggunakn users
+        ]
     ],
 
     /*
@@ -65,10 +71,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'admin_users' => [
+            'driver' => 'eloquent',
+            'table' => App\Models\AdminUser::class,
+        ],
     ],
 
     /*
