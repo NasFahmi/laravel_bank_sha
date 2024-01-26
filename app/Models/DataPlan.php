@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class DataPlan extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'price',
+        'operator_card_id'
+    ];
 }

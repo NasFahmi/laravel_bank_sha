@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('verified')->nullable();//! berfungsi untuk menandakan/mencek apakah akun sudah verifikasi atau belum
             $table->string('profile_picture', 255);
-            $table->stirng('ktp');
+            $table->string('ktp');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->nullable();
             $table->float('amount',10,2);
             $table->string('transaction_code');//unutk menyimpan code pada setiap transaksi, jadi setiap transksi terdapat unique code untuk menandai setiap transaksi di sistem
-            $table->text('descripstion')->nullable();
+            $table->text('description')->nullable();
             $table->string('status');// status setiap pembayaran
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');

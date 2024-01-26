@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('transaction_types', function (Blueprint $table) {
             $table->id();
-            $table->strng('name');
-            $table->strng('code');
+            $table->string('name');
+            $table->string('code');
             $table->enum('action',['credit','debit']); 
             //credit transaksi yang bisa menambahkan amount/balance di akun kita, maka saldo kita akan bertambah
             //debit transaksi saldo kita akan mengurangi saldo kita

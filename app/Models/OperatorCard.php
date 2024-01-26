@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class OperatorCard extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'status',
+        'thumbnail',
+    ];
 }

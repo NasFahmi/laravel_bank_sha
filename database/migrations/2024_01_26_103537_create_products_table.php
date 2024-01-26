@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('thumbnail')->nullable();
             $table->float('price',10,2);
             $table->enum('status',['active','inactive']);//digunaan untuk mencek apakah product itu aktif atau tidak, jika aktif dimunculkan, nanti tidak muncl di stream
-            $table->text('descripstion')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
