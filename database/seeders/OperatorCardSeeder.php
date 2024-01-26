@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\OperatorCard;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class OperatorCardSeeder extends Seeder
 {
@@ -12,6 +13,22 @@ class OperatorCardSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        OperatorCard::insert([
+            [
+                'name'=>'Telkomsel',
+                'status'=>'active',
+                'thumbnail'=>'telkomsel.png'
+            ],
+            [
+                'name'=>'Indosat',
+                'status'=>'active',
+                'thumbnail'=>'indosat.png'
+            ],
+            [
+                'name'=>'Singtel',
+                'status'=>'active',
+                'thumbnail'=>'singtel.png'
+            ],
+        ]);
     }
 }

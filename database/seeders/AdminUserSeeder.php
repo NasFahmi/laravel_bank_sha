@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Carbon\Carbon;
+use App\Models\AdminUser;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class AdminUserSeeder extends Seeder
 {
@@ -12,6 +14,15 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        AdminUser::insert(
+            [
+                'name'=>'admin',
+                'email'=>'admin@admin.com',
+                'password'=>bcrypt('admin'),
+                'created_at'=>Carbon::now(),
+                'updated_at'=>Carbon::now(),
+            ]
+            
+        );
     }
 }
