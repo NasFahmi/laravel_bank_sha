@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code');
-            $table->string('thumbnail');
+            $table->string('thumbnail')->nullable();
             $table->enum('status',['active','inactive']);//digunaan untuk mencek apakah product itu aktif atau tidak, jika aktif dimunculkan, nanti tidak muncl di stream
             $table->softDeletes();
             $table->timestamps();

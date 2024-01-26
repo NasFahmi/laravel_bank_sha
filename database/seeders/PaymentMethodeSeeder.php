@@ -46,6 +46,7 @@ class PaymentMethodeSeeder extends Seeder
             [
                 'name'=>'Bank OCBC',
                 'code'=>'ocbc_va', //code ini merefer ke midtrains karena di midtranis code untuk bank bni adalah bni_va
+                'status'=>'active',
                 'created_at'=>Carbon::now(),
                 'updated_at'=>Carbon::now(),
             ]
