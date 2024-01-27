@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('username', 255)->unique();
             $table->string('password');
-            $table->boolean('verified')->nullable();//! berfungsi untuk menandakan/mencek apakah akun sudah verifikasi atau belum
+            $table->boolean('verified');//! berfungsi untuk menandakan/mencek apakah akun sudah verifikasi atau belum
             $table->string('profile_picture', 255);
-            $table->string('ktp');
+            $table->string('ktp')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

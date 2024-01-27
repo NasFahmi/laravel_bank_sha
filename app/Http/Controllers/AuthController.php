@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class AuthController extends Controller
 {
@@ -31,7 +34,6 @@ class AuthController extends Controller
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-
         return $this->respondWithToken($token);
     }
 
@@ -82,14 +84,16 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
     }
-   public function register(Request $request)
-   {
+    public function register(Request $request)
+    {    
         $dataCredentials = $request->all();
         $validator = Validator::make($dataCredentials,[
             'name'=>'required|string',
             'email'=>'required|email',
             'password'=>'required|min:8|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
             'pin'=>'required|digits:6',
+            'profile_picture'=>'image|mimes:jpg,png,jpeg',
+            'ktp'=>'image|mimes:jpg,png,jpeg',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors'=>$validator->messages()],400);
@@ -99,11 +103,55 @@ class AuthController extends Controller
         if ($emailAlreadyExists->exists()) {
             return response()->json(['errors'=>'Email already exists'],409);
         }
-        
-        $dataCredentials['password'] = bcrypt($dataCredentials['password']);
-        $dataCredentials['pin'] = bcrypt($dataCredentials['pin']);
-        $user = User::create($dataCredentials);
-        $token = $user->createToken('auth_token')->plainTextToken;
-        return response()->json(['data'=>$user,'access_token'=>$token,'token_type'=>'Bearer']);
-   }
+
+        try {
+            DB::beginTransaction();
+            $verified =0;
+            $realnameImg='';
+            //! hanlder profile picture
+            if ($request->hasFile('profile_picture')) {
+                $img = $request->file('profile_picture')->store('public/profile_picture');
+                // dd($img); //public/profile_picture/mqptjiE7m2feQOJxAddETTvetHhu4aVcevMlnXva.png
+                $filepath = storage_path('app/' . $img); //app/public/profile_picture/mqptjiE7m2feQOJxAddETTvetHhu4aVcevMlnXva.png
+                // dd($filepath); //bank_sha\storage\app/public/profile_picture/P8l7orVNXDSPBemFkRL4EGuWPfgmSioXoWutXPKs.jpg"
+                $realnameImg = basename($img);  
+                // dd($realnameImg); mqptjiE7m2feQOJxAddETTvetHhu4aVcevMlnXva.png
+                $this->compressImage($filepath);
+            }
+            //! handler ktp if exsits verified = 1, else = 0
+            if($request->hasFile('ktp')){
+                $img = $request->file('ktp')->store('public/ktp');
+                $filepath = storage_path('app/' . $img);
+                $this->compressImage($filepath);
+                $verified = 1;
+            }
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'username' => $request->name,
+                'password' => bcrypt($request->password),
+                'pin' => bcrypt($request->pin),
+                'verified'=>$verified,
+                'profile_picture' => $realnameImg,
+            ]);
+
+            DB::commit();
+            return response()->json([
+                'success'=>true,
+                'messages'=>'Account successfull created',
+            ]);
+            
+        } catch (\Throwable $th) {
+            DB::rollback();
+            throw $th;
+        }
+
+       
+    }
+    private function compressImage($filePath){
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($filePath);
+        $encoded = $image->toJpeg(40); // Intervention\Image\EncodedImage
+        $encoded->save($filePath);
+    }
 }
